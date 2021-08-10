@@ -1,7 +1,9 @@
+using GraphiQl;
 using GraphQL.Server;
 using GraphQL.Types;
 using GraphQLCoffee.Data;
 using GraphQLCoffee.Interfaces;
+using GraphQLCoffee.Mutation;
 using GraphQLCoffee.Query;
 using GraphQLCoffee.Schema;
 using GraphQLCoffee.Services;
@@ -39,6 +41,13 @@ namespace GraphQlProject
             services.AddTransient<SubMenuQuery>();
             services.AddTransient<RootQuery>();
             services.AddTransient<ISchema, RootSchema>();
+            services.AddTransient<MenuMutation>();
+            services.AddTransient<ReservationMutation>();
+            services.AddTransient<SubMenuMutation>();
+            services.AddTransient<RootMutation>();
+            services.AddTransient<MenuInputType>();
+            services.AddTransient<ReservationInputType>();
+            services.AddTransient<SubMenuInputType>();
 
             services.AddGraphQL(options =>
             {
@@ -49,12 +58,16 @@ namespace GraphQlProject
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GraphQLDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            dbContext.Database.EnsureCreated();
+            app.UseGraphiQl("/graphql");
+            app.UseGraphQL<ISchema>();
         }
     }
 }
