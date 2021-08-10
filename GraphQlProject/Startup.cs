@@ -1,7 +1,11 @@
 using GraphQL.Server;
+using GraphQL.Types;
 using GraphQLCoffee.Data;
 using GraphQLCoffee.Interfaces;
+using GraphQLCoffee.Query;
+using GraphQLCoffee.Schema;
 using GraphQLCoffee.Services;
+using GraphQLCoffee.Type;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +31,14 @@ namespace GraphQlProject
             services.AddTransient<IMenu, MenuService>();
             services.AddTransient<ISubMenu, SubMenuService>();
             services.AddTransient<IReservation, ReservationService>();
+            services.AddTransient<MenuType>();
+            services.AddTransient<ReservationType>();
+            services.AddTransient<SubMenuType>();
+            services.AddTransient<MenuQuery>();
+            services.AddTransient<ReservationQuery>();
+            services.AddTransient<SubMenuQuery>();
+            services.AddTransient<RootQuery>();
+            services.AddTransient<ISchema, RootSchema>();
 
             services.AddGraphQL(options =>
             {
